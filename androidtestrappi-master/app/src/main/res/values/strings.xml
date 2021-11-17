@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Peliculas y Series Online</string>
+    <string name="tab_text_1">Populares</string>
+    <string name="tab_text_2">Top Rate</string>
+    <string name="tab_text_3">Busqueda</string>
+    <string name="movie_item_description">Afiche película</string>
+    <string name="movie_item_vote_average_description">promedio de votos</string>
+    <string name="connection_fails">Hubo un problema de conexión, inténtelo mas tarde</string>
+    <string name="Info_not_available">No hay información disponible</string>
+    <string name="search">Buscar</string>
+    <string name="imagen_de_fondo">Imagen de fondo</string>
+    <string name="afiche_de_la_pelicula">Afiche de la película</string>
+    <string name="puntuacion_de_usuario">Puntuación de usuario</string>
+    <string name="play_trailer">Reproducir trailer</string>
+    <string name="description">Descripción</string>
+    <string name="information">Información</string>
+    <string name="original_title">Título original</string>
+    <string name="state">Estado</string>
+    <string name="release_date">Información del estreno</string>
+    <string name="original_language">Lenguaje original</string>
+    <string name="runtime">Duración</string>
+    <string name="budget">Presupuesto</string>
+    <string name="revenue">Ingresos</string>
+    <string name="genres">Géneros</string>
+    <string name="score_value">%1$d%%</string>
+    <string name="first_air_date">Primera emisión</string>
+    <string name="nextEpisodeToAir">Emisión siguiente episodio</string>
+    <string name="number_of_episodes">Cantidad de episodios</string>
+    <string name="number_of_seasons">Numero de temporadas</string>
+    <string name="original_name">Nombre original</string>
+    <string name="retry">Reintentar</string>
+    <string name="movies">Peliculas</string>
+    <string name="series">Series</string>
+    <string name="acerca">Acerca de </string>
+
+
+
+</resources>

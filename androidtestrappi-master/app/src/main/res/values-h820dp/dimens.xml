@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="image_backdrop_height">415dp</dimen>
+    <dimen name="image_Poster_marginTop">249dp</dimen>
+    <dimen name="image_Poster_width">201dp</dimen>
+    <dimen name="image_Poster_height">262dp</dimen>
+</resources>
