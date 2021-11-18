@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 android {
+
     compileSdkVersion 31
     defaultConfig {
         applicationId "com.rappi.adminsion"
@@ -10,6 +11,9 @@ android {
         versionCode 2
         versionName "1.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+    buildFeatures {
+        viewBinding true
     }
 
     compileOptions {

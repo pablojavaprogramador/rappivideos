@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F1F1F1"
-    tools:context=".ActivityDetailsMovie">
+    tools:context=".ActivityDetallesPelicula">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,14 +45,14 @@
                 android:layout_height="64dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="24dp"
-                android:textColor="#FFFFFF"
+                android:textColor="#0d0808"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:ellipsize="end"
                 android:lines="2"
-                app:layout_constraintBottom_toBottomOf="@+id/image_Poster"
+                app:layout_constraintBottom_toBottomOf="@+id/image_Poster_movie"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/image_Poster" />
+                app:layout_constraintStart_toEndOf="@+id/image_Poster_movie" />
 
             <ProgressBar
                 android:id="@+id/progressBar_user_score"
@@ -66,7 +66,7 @@
                 android:progress="0"
                 android:progressDrawable="@drawable/circle_progress"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image_Poster" />
+                app:layout_constraintTop_toBottomOf="@+id/image_Poster_movie" />
 
             <TextView
                 android:id="@+id/textView_user_score_value"
@@ -96,7 +96,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/view"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/textView_user_score_value"
-                app:layout_constraintTop_toBottomOf="@+id/image_Poster" />
+                app:layout_constraintTop_toBottomOf="@+id/image_Poster_movie" />
 
             <View
                 android:id="@+id/view"
@@ -107,7 +107,7 @@
                 android:background="#888888"
                 android:visibility="invisible"
                 app:layout_constraintEnd_toStartOf="@+id/button_play_trailer"
-                app:layout_constraintTop_toBottomOf="@+id/image_Poster" />
+                app:layout_constraintTop_toBottomOf="@+id/image_Poster_movie" />
 
             <Button
                 android:id="@+id/button_play_trailer"
@@ -124,7 +124,7 @@
                 android:textSize="14sp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image_Poster" />
+                app:layout_constraintTop_toBottomOf="@+id/image_Poster_movie" />
 
             <ProgressBar
                 android:id="@+id/progressBarData"
@@ -137,7 +137,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/image_backdrop" />
+                app:layout_constraintTop_toTopOf="@+id/image_backdrop_tv" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
