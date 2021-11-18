@@ -1,51 +1,50 @@
 package com.rappi.adminsion
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.Target
 import com.google.android.youtube.player.YouTubeStandalonePlayer
-import com.rappi.adminsion.data.remote.*
-import com.rappi.adminsion.data.remote.pelicula.MovieDetailsResponse
-import com.rappi.adminsion.databinding.ActivityDetailsMovieBinding
+import com.rappi.adminsion.data.remote.ApiRequest
+import com.rappi.adminsion.data.remote.CallbackResponseTvSerie
+import com.rappi.adminsion.data.remote.GetServiceThemoviedb
+import com.rappi.adminsion.data.remote.serie.TvDetailsResponse
+import com.rappi.adminsion.data.remote.serieCallback
+import com.rappi.adminsion.databinding.ActivityDetailsTvBinding
 import com.rappi.adminsion.util.Constant.YOUTUBE_API_KEY
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ActivityDetallesPelicula : AppCompatActivity() , movieCallback {
+class ActivityDetallesTv  : AppCompatActivity() , serieCallback {
 
-    private val callbackResponse = CallbackResponsePelicula(this)
+    private val callbackResponse = CallbackResponseTvSerie(this)
     private var idVideo: String? = null
-    private var binding: ActivityDetailsMovieBinding? = null
+    private var binding: ActivityDetailsTvBinding? = null
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityDetailsMovieBinding.inflate(getLayoutInflater())
-        setContentView(binding!!.getRoot())
-        val actionBar: ActionBar? = getSupportActionBar()
-        if (actionBar != null) actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.toolbar_gradient))
-        val apiRequest = ApiRequest(getApplicationContext())
-        var movieId = 0
-        val bundle: Bundle? = this.getIntent().getExtras()
+        binding = ActivityDetailsTvBinding.inflate(layoutInflater)
+        setContentView(binding?.getRoot())
+        val actionBar = supportActionBar
+        actionBar?.setBackgroundDrawable(resources.getDrawable(R.drawable.toolbar_gradient))
+        val apiRequest = ApiRequest(applicationContext)
+        val bundle = this.intent.extras
+        var tvId = 0
         if (bundle != null) {
-            movieId = bundle.getInt("MovieId")
+            tvId = bundle.getInt("TvId")
         }
-        if (movieId != 0) {
-            apiRequest.getDataDetails(callbackResponse, "movie", movieId, getApplicationContext())
-            binding!!.buttonPlayTrailer.setOnClickListener(View.OnClickListener {
+        if (tvId != 0) {
+            apiRequest.getDataDetails(callbackResponse, "tv", tvId, applicationContext)
+            binding?.buttonPlayTrailer?.setOnClickListener(View.OnClickListener {
                 if (idVideo != null) {
                     val intent = YouTubeStandalonePlayer.createVideoIntent(
-                        this@ActivityDetallesPelicula,
+                        this@ActivityDetallesTv,
                         YOUTUBE_API_KEY,
                         idVideo,
                         0,
@@ -61,13 +60,12 @@ class ActivityDetallesPelicula : AppCompatActivity() , movieCallback {
     }
 
 
-    override fun OnmovieResponse(data: MovieDetailsResponse) {
+    override fun OnserieResponse(data: TvDetailsResponse) {
         val MOVIE_BASE_URL = GetServiceThemoviedb.URL_IMG + "t/p/w780"
         if (data != null) {
-            Log.i("TODO", data.getOverview()!!)
             if (data.getBackdrop_path() != null) {
                 binding?.imageBackdropTv?.let {
-                    Glide.with(getApplicationContext())
+                    Glide.with(applicationContext)
                         .load(MOVIE_BASE_URL + data.getBackdrop_path())
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         .placeholder(R.drawable.placeholder)
@@ -76,16 +74,16 @@ class ActivityDetallesPelicula : AppCompatActivity() , movieCallback {
                 }
             }
             if (data.getPoster_path() != null) {
-                binding?.let {
-                    Glide.with(getApplicationContext())
+                binding?.imagePosterTv?.let {
+                    Glide.with(applicationContext)
                         .load(MOVIE_BASE_URL + data.getPoster_path())
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         .placeholder(R.drawable.placeholder)
                         .thumbnail(0.5f)
-                        .into(it.imagePosterMovie)
+                        .into(it)
                 }
             }
-            binding?.textViewTitle?.setText(data.getTitle().toString())
+            binding?.textViewTitle?.setText(data.getName())
             binding?.progressBarUserScore?.setProgress((data.getVote_average() * 10).toInt())
             binding?.textViewUserScoreValue?.setText(
                 getString(
@@ -96,51 +94,56 @@ class ActivityDetallesPelicula : AppCompatActivity() , movieCallback {
             if (data.getVideos()!!.results != null && data.getVideos()!!.results.size > 0) {
                 if (data.getVideos()!!.results[0].site.equals("YouTube", ignoreCase = true)) {
                     binding?.buttonPlayTrailer?.setVisibility(View.VISIBLE)
-                    // view.setVisibility(View.VISIBLE);
                     idVideo = data.getVideos()!!.results[0].key
                 }
             }
-            Log.i("LOG descripcion ", data.getOverview()!!)
-            binding?.textViewDescription?.setText(data.getOverview())
-            binding?.textViewOriginalTitle?.setText(data.getOriginal_title())
+            binding?.textViewTitleDescription?.setText(data.getOverview())
+            binding?.textViewOriginalName?.setText(data.getOriginal_name())
             binding?.textViewState?.setText(data.getStatus())
-            binding?.textViewReleaseDate?.setText(
+            if (data.getEpisode_run_time()?.size!! > 0) {
+                binding?.textViewEpisodeRunTime?.setText(
+                    String.format(
+                        Locale.getDefault(),
+                        "%dh %02dm",
+                        data.getEpisode_run_time()!![0] / 60,
+                        data.getEpisode_run_time()!![0] % 60
+                    )
+                )
+            } else {
+                binding?.textViewEpisodeRunTime?.setText("-")
+            }
+            binding?.textViewFirstAirDate?.setText(
                 SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
-                    data.getRelease_date()!!.time
+                    data.getFirst_air_date()!!.time
                 )
             )
+            if (data.getNextEpisodeToAir() != null) {
+                binding?.textViewFirstAirDate?.setText(
+                    SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(
+                        data.getNextEpisodeToAir()!!.air_date.time
+                    )
+                )
+            } else {
+                binding?.textViewFirstAirDate?.setText("-")
+            }
             binding?.textViewOriginalLanguage?.setText(data.getOriginal_language())
-            binding?.textViewRuntime?.setText(
-                String.format(
-                    Locale.getDefault(),
-                    "%dh %02dm",
-                    data.getRuntime() / 60,
-                    data.getRuntime() % 60
-                )
-            )
-            binding?.textViewBudget?.setText(
-                DecimalFormat("$#,###", DecimalFormatSymbols()).format(
-                    data.getBudget()
-                )
-            )
-            binding?.textViewRevenue?.setText(
-                DecimalFormat("$#,###", DecimalFormatSymbols()).format(
-                    data.getRevenue()
-                )
-            )
+            binding?.textViewNumberOfEpisodes?.setText(data.getNumber_of_episodes().toString())
+            binding?.textViewNumberOfSeasons?.setText(data.getNumber_of_seasons().toString())
             var genres = ""
             for (i in data.getGenres()!!.indices) {
                 genres = genres + data.getGenres()!![i]!!.name + ", "
             }
+            if (genres.trim { it <= ' ' }.isEmpty()) genres = "-, "
             binding?.textViewGenres?.setText(genres.substring(0, genres.length - 2))
             binding?.layoutDescription?.setVisibility(View.VISIBLE)
             binding?.layoutInfo?.setVisibility(View.VISIBLE)
             binding?.progressBarData?.setVisibility(View.GONE)
         } else {
-            Toast.makeText(getApplicationContext(), R.string.Info_not_available, Toast.LENGTH_LONG)
+            Toast.makeText(applicationContext, R.string.Info_not_available, Toast.LENGTH_LONG)
                 .show()
             finish()
         }
     }
+
 
 }
